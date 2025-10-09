@@ -92,10 +92,11 @@ export function applyScholarship(name){
 // ======================
 const studentForm = document.getElementById('studentForm');
 if(studentForm){
-  studentForm.addEventListener('submit', function(e){
-    e.preventDefault();
-    alert("Student info saved successfully! Check Matched Scholarships section.");
-  });
+    alert("succes");
+//  studentForm.addEventListener('submit', function(e){
+//    e.preventDefault();
+//    alert("Student info saved successfully! Check Matched Scholarships section.");
+//  });
 }
 
 const grievanceForm = document.getElementById('grievanceForm');
