@@ -3,9 +3,20 @@
 // ======================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-analytics.js";
-import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+import { 
+  getAuth, 
+  signInWithEmailAndPassword, 
+  signOut 
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+import { 
+  getFirestore, 
+  collection, 
+  addDoc 
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 
-// Firebase config
+// ======================
+// Firebase Config
+// ======================
 const firebaseConfig = {
   apiKey: "AIzaSyD05XaBvC5fMUVLMZHhewJDzWJhlDTRmbg",
   authDomain: "miniproject-2db9d.firebaseapp.com",
@@ -16,12 +27,16 @@ const firebaseConfig = {
   measurementId: "G-WQ18V8TX11"
 };
 
-// Initialize Firebase
+// ======================
+// Firebase Init
+// ======================
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
-console.log("Firebase Initialized!");
+console.log("✅ Firebase Initialized!");
+
 
 // ======================
 // Login Function
@@ -29,39 +44,44 @@ console.log("Firebase Initialized!");
 const loginBtn = document.getElementById("loginBtn");
 const loginError = document.getElementById("loginError");
 
-loginBtn.addEventListener("click", async () => {
-  const email = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
+if (loginBtn) {
+  loginBtn.addEventListener("click", async () => {
+    const email = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
 
-  if (!email || !password) {
-    loginError.textContent = "Please enter both email and password.";
-    return;
-  }
+    if (!email || !password) {
+      loginError.textContent = "Please enter both email and password.";
+      return;
+    }
 
-  try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
-    console.log("Logged in user:", user);
-    window.location.href = "dashboard.html"; // redirect to dashboard
-  } catch (error) {
-    console.error(error);
-    loginError.textContent = error.message;
-  }
-});
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      console.log("Logged in:", userCredential.user.email);
+      window.location.href = "dashboard.html"; // redirect to dashboard
+    } catch (error) {
+      console.error(error);
+      loginError.textContent = error.message;
+    }
+  });
+}
+
 
 // ======================
 // Logout Function
 // ======================
-export function logout() {
-  auth.signOut().then(() => {
+const logoutBtn = document.getElementById("logoutBtn");
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", async () => {
+    await signOut(auth);
     window.location.href = "index.html";
   });
 }
 
+
 // ======================
 // Tab Switching (Main Sections)
 // ======================
-export function showSection(sectionId){
+window.showSection = function(sectionId){
   document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
   document.getElementById(sectionId).classList.add('active');
 
@@ -69,10 +89,11 @@ export function showSection(sectionId){
   document.querySelector(`.tab-btn[onclick="showSection('${sectionId}')"]`).classList.add('active');
 }
 
+
 // ======================
 // Scholarship Category Switching
 // ======================
-export function showScholarshipCategory(cat){
+window.showScholarshipCategory = function(cat){
   document.querySelectorAll('.scholarship-category').forEach(c => c.classList.remove('active'));
   document.getElementById(cat).classList.add('active');
 
@@ -80,31 +101,49 @@ export function showScholarshipCategory(cat){
   document.querySelector(`.subtab-btn[onclick="showScholarshipCategory('${cat}')"]`).classList.add('active');
 }
 
+
 // ======================
 // Scholarship Apply Demo
 // ======================
-export function applyScholarship(name){
+window.applyScholarship = function(name){
   alert(`Generate application guide for ${name} with links and eligibility`);
 }
 
+
 // ======================
-// Form Submit Handlers
+// Save Student Form to Firestore
 // ======================
-const studentForm = document.getElementById('studentForm');
-if(studentForm){
-    alert("succes");
-//  studentForm.addEventListener('submit', function(e){
-//    e.preventDefault();
-//    alert("Student info saved successfully! Check Matched Scholarships section.");
-//  });
+const studentForm = document.getElementById("studentForm");
+const successMsg = document.getElementById("studentSuccess");
+
+if (studentForm) {
+  studentForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(studentForm);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      await addDoc(collection(db, "student-form"), data);
+      successMsg.textContent = "✅ Student details saved successfully!";
+      studentForm.reset();
+    } catch (error) {
+      console.error("Error saving form:", error);
+      successMsg.textContent = "❌ Failed to save data.";
+    }
+  });
 }
 
-const grievanceForm = document.getElementById('grievanceForm');
-if(grievanceForm){
-  grievanceForm.addEventListener('submit', function(e){
+
+// ======================
+// Grievance Form
+// ======================
+const grievanceForm = document.getElementById("grievanceForm");
+if (grievanceForm) {
+  grievanceForm.addEventListener("submit", (e) => {
     e.preventDefault();
     alert("Your grievance has been submitted!");
   });
 }
 
-console.log("All scripts loaded and ready!");
+console.log("🚀 All scripts loaded and ready!");
