@@ -5,6 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BenefitBridge | Dashboard</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Highlight tabs with results */
+    .tab-btn.has-results {
+      background-color: #28a745;
+      color: white;
+      font-weight: bold;
+    }
+
+    .scholarship-item {
+      border: 1px solid #ccc;
+      padding: 8px;
+      margin: 5px 0;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+
+    .scholarship-category {
+      display: none;
+    }
+
+    .scholarship-category.active {
+      display: block;
+    }
+
+    .tab-btn.active {
+      background-color: #007bff;
+      color: white;
+    }
+  </style>
 </head>
 <body>
   <!-- Header -->
@@ -14,17 +43,16 @@
   </header>
 
   <!-- Main Section Tabs -->
-  <div class="sections">
-    <button class="tab-btn active" onclick="showSection('student')">Student Info</button>
-    <button class="tab-btn" onclick="showSection('scholarships')">Matched Scholarships</button>
-    <button class="tab-btn" onclick="showSection('grievance')">Grievance</button>
-  </div>
+ <div class="subtabs">
+  <button class="subtab-btn" onclick="showScholarshipCategory('arts-category')">Arts & Science</button>
+  <button class="subtab-btn" onclick="showScholarshipCategory('engineering-category')">Engineering</button>
+  <button class="subtab-btn" onclick="showScholarshipCategory('medical-category')">Medicals</button>
+</div>
+
 
   <!-- Student Info Section -->
   <section id="student" class="tab-section active">
     <h2>Enter Student Details</h2>
-    
-    <!-- Success message -->
     <p id="studentSuccess" style="color: green; font-weight: bold;"></p>
 
     <form id="studentForm" action="">
@@ -38,16 +66,10 @@
         <input type="text" name="aadhar" placeholder="Aadhar Number" required>
         <input type="text" name="community" placeholder="Community" required>
         <input type="text" name="caste" placeholder="Caste" required>
+        <input type="text" name="gender" placeholder="Gender" required>
         <input type="text" name="qualification10" placeholder="10th Qualification" required>
-        <input type="text" name="qualification12" placeholder="12th Qualification" required>
+        <input type="text" name="qualification12" placeholder="12th Qualification %" required>
         <input type="text" name="income" placeholder="Income Level" required>
-
-        <!-- File Uploads -->
-        <label>Aadhar Upload: <input type="file" name="fileAadhar" required></label>
-        <label>Community Certificate: <input type="file" name="fileCommunity" required></label>
-        <label>Income Certificate: <input type="file" name="fileIncome" required></label>
-        <label>10th Marksheet: <input type="file" name="file10" required></label>
-        <label>12th Marksheet: <input type="file" name="file12" required></label>
       </div>
       <button type="submit">Save Info</button>
     </form>
@@ -55,28 +77,27 @@
 
   <!-- Matched Scholarships Section -->
   <section id="scholarships" class="tab-section">
-    <h2>Matched Scholarships</h2>
-    
-    <!-- Scholarship Category Tabs -->
-    <div class="scholarship-tabs">
-      <button class="subtab-btn active" onclick="showScholarshipCategory('engineering')">Engineering</button>
-      <button class="subtab-btn" onclick="showScholarshipCategory('medical')">Medical</button>
-      <button class="subtab-btn" onclick="showScholarshipCategory('arts')">Arts</button>
+    <h2>Eligible Scholarships</h2>
+    <p>Click on a category to view matched scholarships:</p>
+
+    <!-- Category Tabs -->
+    <div class="subtabs">
+      <button class="subtab-btn" onclick="showScholarshipCategory('arts-category')">Arts & Science</button>
+      <button class="subtab-btn" onclick="showScholarshipCategory('engineering-category')">Engineering</button>
+      <button class="subtab-btn" onclick="showScholarshipCategory('medical-category')">Medicals</button>
     </div>
 
-    <!-- Scholarship Categories -->
-    <div id="engineering" class="scholarship-category active"></div>
-    <div id="medical" class="scholarship-category"></div>
-    <div id="arts" class="scholarship-category"></div>
+    <!-- Scholarship Containers -->
+    <div id="arts-category" class="scholarship-category"></div>
+    <div id="engineering-category" class="scholarship-category"></div>
+    <div id="medical-category" class="scholarship-category"></div>
   </section>
 
   <!-- Grievance Section -->
   <section id="grievance" class="tab-section">
-    <h2>Submit Grievance / Support</h2>
+    <h2>Submit Grievance</h2>
     <form id="grievanceForm">
-      <input type="text" placeholder="Name" required>
-      <input type="email" placeholder="Email" required>
-      <textarea placeholder="Describe your issue..." required></textarea>
+      <textarea name="grievance" placeholder="Enter your grievance" required></textarea>
       <button type="submit">Submit</button>
     </form>
   </section>
