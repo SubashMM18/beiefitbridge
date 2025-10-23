@@ -3,106 +3,768 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BenefitBridge | Dashboard</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>BenefitBridge Dashboard</title>
+
   <style>
-    /* Highlight tabs with results */
-    .tab-btn.has-results {
-      background-color: #28a745;
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: #fff9f9;
+      color: #521212;
+    }
+    .dob-wrapper label {
+  margin-bottom: 6px;
+}
+#board { width: 100%; }
+#firstGradFields { width: 100%; }
+/* 🎯 Fix slight downward shift of DOB box */
+/* 🎯 Final pixel-perfect alignment for DOB field */
+.dob-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-top: -17px; /* lifted slightly more for perfect line match */
+}
+
+.dob-wrapper label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #7d0d0d;
+  margin-bottom: 3px;
+  line-height: 1;
+}
+
+.dob-wrapper input[type="date"] {
+  height: 46px;
+  width: 100%;
+  padding: 10px;
+  border: 1.5px solid #b01b1b;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #521212;
+  background: #fff;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.dob-wrapper input[type="date"]:focus {
+  border-color: #7d0d0d;
+  box-shadow: 0 0 8px rgba(125, 13, 13, 0.3);
+}
+
+
+
+    header {
+      background: linear-gradient(90deg, #7d0d0d, #b01b1b);
       color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 40px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    header h1 img {
+      height: 45px;
+      width: 45px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      background: #fff;
+      object-fit: cover;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #logoutBtn, #profileBtn {
+      background: white;
+      color: #7d0d0d;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
       font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
     }
 
-    .scholarship-item {
-      border: 1px solid #ccc;
-      padding: 8px;
+    #logoutBtn:hover, #profileBtn:hover {
+      background: #f5c6c6;
+      transform: scale(1.05);
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      background: #fbe3e3;
+      padding: 10px 0;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      background: #fff;
+      color: #7d0d0d;
+      border: 2px solid #b01b1b;
+      border-radius: 6px;
+      padding: 8px 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .tab-btn.active, .tab-btn:hover {
+      background: #b01b1b;
+      color: white;
+      transform: scale(1.05);
+    }
+
+    .tab-content { display: none; padding: 30px 60px; }
+    .tab-content.active { display: block; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    input, select {
+      padding: 10px;
+      border: 1.5px solid #b01b1b;
+      border-radius: 8px;
+      background: #fff;
+      font-size: 15px;
+      transition: 0.3s;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #7d0d0d;
+      box-shadow: 0 0 5px rgba(125, 13, 13, 0.3);
+    }
+
+    .save-btn {
+      background: linear-gradient(90deg, #7d0d0d, #b01b1b);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      margin-top: 15px;
+      transition: 0.3s;
+    }
+
+    .save-btn:hover {
+      transform: scale(1.03);
+      box-shadow: 0 5px 15px rgba(125, 13, 13, 0.3);
+    }
+
+    .success-msg { color: green; font-weight: bold; margin-top: 15px; }
+
+    /* 🎓 Scholarships layout horizontal */
+    .scholarships-row {
+      display: flex;
+      justify-content: space-around;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .scholarship-box {
+      background: #b76b6b;
+      flex: 1;
+      min-width: 250px;
+      color: white;
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+    }
+
+    ul li {
+      background: #fff;
+      color: #7d0d0d;
+      border-radius: 8px;
+      padding: 10px;
       margin: 5px 0;
-      border-radius: 5px;
-      background-color: #f9f9f9;
+      list-style: none;
+      border: 1.5px solid #b01b1b;
+      cursor: pointer;
+      transition: 0.3s;
     }
 
-    .scholarship-category {
-      display: none;
-    }
-
-    .scholarship-category.active {
-      display: block;
-    }
-
-    .tab-btn.active {
-      background-color: #007bff;
+    ul li:hover {
+      background: #b01b1b;
       color: white;
     }
+
+    /* Scholarship Info – only names */
+    #info-list li {
+      list-style: none;
+      border: 1.5px solid #b01b1b;
+      border-radius: 8px;
+      padding: 10px;
+      margin: 5px 0;
+      background: #fff;
+      text-align: center;
+      color: #7d0d0d;
+    }
+    /* ================= PROFILE PANEL ================= */
+/* =============================== */
+/* 🌟 MODERN STUDENT PROFILE PANEL */
+/* =============================== */
+.profile-panel {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 380px;
+  height: 100%;
+  background: linear-gradient(160deg, #ffffffcc, #fff5f5ee);
+  backdrop-filter: blur(10px);
+  box-shadow: -8px 0 25px rgba(176, 27, 27, 0.25);
+  border-left: 6px solid #b01b1b;
+  border-radius: 20px 0 0 20px;
+  z-index: 1100;
+  overflow-y: auto;
+  padding: 30px 25px 50px;
+  transition: right 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.profile-panel.active {
+  right: 0;
+}
+
+/* ❌ Close Button */
+.close-profile {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: #b01b1b;
+  color: white;
+  border: none;
+  font-size: 20px;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+.close-profile:hover {
+  background: #7d0d0d;
+  transform: scale(1.1);
+}
+
+/* 👤 Header Section */
+.profile-header {
+  text-align: center;
+  color: #b01b1b;
+  margin-top: 40px;
+  margin-bottom: 25px;
+}
+.profile-header i {
+  font-size: 50px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 15px;
+  border-radius: 50%;
+  color: #b01b1b;
+  box-shadow: 0 3px 12px rgba(176, 27, 27, 0.2);
+}
+.profile-header h2 {
+  font-size: 1.7rem;
+  font-weight: 800;
+  margin-top: 12px;
+  text-shadow: 0 1px 5px rgba(176, 27, 27, 0.2);
+}
+
+/* 📋 Profile Info Boxes */
+.profile-body {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.profile-item {
+  background: #ffffff;
+  border: 1.5px solid #f0cfcf;
+  border-left: 5px solid #b01b1b;
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+.profile-item:hover {
+  transform: translateX(3px);
+  box-shadow: 0 5px 14px rgba(176, 27, 27, 0.15);
+}
+
+.profile-item span {
+  display: block;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #7d0d0d;
+  margin-bottom: 4px;
+}
+.profile-item p {
+  margin: 0;
+  font-size: 1rem;
+  color: #2b2b2b;
+  line-height: 1.4;
+}
+
+/* ✨ Footer Message */
+.profile-footer {
+  margin-top: 25px;
+  padding: 10px;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #7d0d0d;
+  font-weight: 600;
+  background: rgba(255, 235, 235, 0.8);
+  border-radius: 10px;
+  box-shadow: inset 0 0 8px rgba(176, 27, 27, 0.15);
+}
+
+/* Entry Animation */
+.profile-panel.active .profile-body {
+  animation: fadeSlideIn 0.5s ease-in;
+}
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+/* 🎯 DOB Field Fix */
+.dob-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap:0px;
+}
+
+.dob-wrapper label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #7d0d0d;
+  margin-left: 5px;
+}
+
+.dob-wrapper input[type="date"] {
+  padding: 8px;
+  border: 1.5px solid #b01b1b;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #521212;
+  background: #fff;
+  transition: all 0.3s ease;
+  width: 90%;
+}
+
+.dob-wrapper input[type="date"]:focus {
+  border-color: #7d0d0d;
+  box-shadow: 0 0 8px rgba(125, 13, 13, 0.3);
+}
+
+
+
+
+
+    /* 👇 Bottom slide-up consolidation panel */
+    .bottom-panel {
+  position: fixed;
+  left: 100%;
+  bottom: -8%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 900px;
+  background: white;
+  border-radius: 25px;
+  box-shadow: 0 -5px 40px rgba(0, 0, 0, 0.25);
+  z-index: 1000;
+  padding: 60px 40px 30px 40px; /* ⬅ top padding increased for button space */
+  opacity: 0;
+  transition: bottom 0.4s ease, opacity 0.4s ease;
+}
+
+.bottom-panel.active {
+  bottom: 40px;
+  opacity: 1;
+}
+
+
+  .close-bottom-panel {
+  background: #b01b1b;
+  color: #fff;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 600;
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  z-index: 10;
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+}
+
+.close-bottom-panel:hover {
+  background: #7d0d0d;
+  transform: scale(1.05);
+}
+/* 🎯 DOB Field Styling */
+.dob-container {
+  position: relative;
+}
+
+.date-input {
+  width: 100%;
+  padding: 5px;
+  border: 1.5px solid #b01b1b;
+  border-radius: 8px;
+  font-size: 15px;
+  background-color: #fff;
+  color: #521212;
+  cursor: pointer;
+}
+
+/* Placeholder magic for date input */
+.placeholder-text {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  color: #9b4b4b;
+  pointer-events: none;
+  font-size: 15px;
+  transition: 0.3s ease;
+  opacity: 0.7;
+}
+/* 🎯 Fix spacing between Date of Birth & Gender fields */
+#dob, #gender {
+  margin-bottom: 10px; /* Adds vertical gap */
+}
+
+/* This ensures horizontal gap if in same row (grid layout) */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 18px; /* 🧩 Adds equal space between all boxes */
+}
+
+/* Optional — make date field visually balanced */
+.date-input {
+  padding: 10px;
+  border: 1.5px solid #b01b1b;
+  border-radius: 8px;
+  font-size: 15px;
+  background-color: #fff;
+  color: #521212;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+
+.date-input:focus + .placeholder-text,
+.date-input:not(:placeholder-shown) + .placeholder-text,
+.date-input:valid + .placeholder-text {
+  top: 0px;
+  left: 8px;
+  font-size: 12px;
+  background: #fff;
+  padding: 0 5px;
+  color: #7d0d0d;
+  opacity: 1;
+}
+
+/* Prevent typing manually */
+.date-input::-webkit-inner-spin-button,
+.date-input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+}
+/* ♿️ Disability Field Styling */
+#disabilityFields {
+  grid-column: span 2; /* take full width for better layout */
+  background: #fff8f8;
+  border: 1.5px solid #b01b1b;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 15px;
+  color: #521212;
+  box-shadow: 0 2px 5px rgba(176, 27, 27, 0.1);
+}
+
+#disabilityFields label {
+  font-weight: 600;
+  color: #7d0d0d;
+  margin-right: 15px;
+}
+
+#disabilityFields input[type="radio"] {
+  margin-right: 4px;
+  accent-color: #b01b1b;
+  cursor: pointer;
+}
+/* ✨ Input Focus Glow — Elegant Red Highlight for All Fields */
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #b01b1b;
+  box-shadow: 0 0 10px rgba(176, 27, 27, 0.4); /* soft red glow */
+  transition: all 0.25s ease-in-out;
+  background-color: #fff9f9; /* slight tint for premium feel */
+}
+
+/* 🔹 On hover — slight border brightness */
+input:hover,
+select:hover,
+textarea:hover {
+  border-color: #7d0d0d;
+  transition: 0.25s;
+}
+.save-btn:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 20px rgba(176, 27, 27, 0.4); /* matching glow */
+}
+/* 🔧 Make First Name, Last Name, and Gender match DOB box */
+#firstname,
+#lastname,
+#gender {
+  height: 46px;              /* same height as date input */
+  padding: 10px;
+  border: 1.5px solid #b01b1b;
+  border-radius: 8px;
+  font-size: 15px;
+  background-color: #fff;
+  color: #521212;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+#firstname:focus,
+#lastname:focus,
+#gender:focus {
+  border-color: #7d0d0d;
+  box-shadow: 0 0 8px rgba(125, 13, 13, 0.3);
+}
+/* 🎯 FIXED — Bottom Slide-Up Scholarship Detail Panel */
+.bottom-panel {
+  position: fixed;
+  left: 50%;
+  bottom: -100%;
+  transform: translateX(-50%);
+  width: 85%;
+  max-width: 900px;
+  background: #fff;
+  border-radius: 25px;
+  box-shadow: 0 -5px 40px rgba(0, 0, 0, 0.25);
+  z-index: 1000;
+  padding: 40px 40px 30px 40px;
+  opacity: 0;
+  transition: bottom 0.4s ease, opacity 0.4s ease;
+}
+
+/* When active — slides up beautifully */
+.bottom-panel.active {
+  bottom: 40px;
+  opacity: 1;
+}
+
+/* Close button style */
+.close-bottom-panel {
+  background: #b01b1b;
+  color: #fff;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 600;
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  z-index: 10;
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+.close-bottom-panel:hover {
+  background: #7d0d0d;
+  transform: scale(1.05);
+}
+
+
+
+
+
+
+
+    .scholarship-detail h3 { color: #b01b1b; margin-top: 10px; }
+    .scholarship-detail p { color: #333; margin: 6px 0; }
   </style>
 </head>
+
 <body>
-  <!-- Header -->
   <header>
-    <h1>BenefitBridge</h1>
-    <button id="logoutBtn">Logout</button>
+    <h1><img src="benefit.png" alt="Logo" /> BenefitBridge Dashboard</h1>
+    <div class="header-right">
+      <button id="profileBtn">👤 Student Profile</button>
+      <button id="logoutBtn">Logout</button>
+    </div>
   </header>
 
-  <!-- Main Section Tabs -->
- <div class="subtabs">
-  <button class="subtab-btn" onclick="showScholarshipCategory('arts-category')">Arts & Science</button>
-  <button class="subtab-btn" onclick="showScholarshipCategory('engineering-category')">Engineering</button>
-  <button class="subtab-btn" onclick="showScholarshipCategory('medical-category')">Medicals</button>
+  <!-- 👇 Slide-up consolidation panel -->
+  <div id="bottomPanel" class="bottom-panel">
+    <button id="closeBottomPanel" class="close-bottom-panel">Close</button>
+    <div id="bottomDetail"></div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="student-info">Student Info</button>
+    <button class="tab-btn" data-tab="matched-scholarships">Matched Scholarships</button>
+    <button class="tab-btn" data-tab="scholarship-info">Scholarship Info</button>
+  </div>
+
+  <!-- Student Info -->
+  <section id="student-info" class="tab-content active">
+    <h2>Enter Student Details</h2>
+    <form id="studentForm" class="student-form">
+     <div class="form-grid">
+  <input id="firstname" placeholder="First Name" required>
+  <input id="lastname" placeholder="Last Name" required>
+
+  <!-- 📅 Fixed DOB field with date selector -->
+  <!-- 📅 Date of Birth -->
+<div class="dob-wrapper">
+  <label for="dob">Select Date of Birth</label>
+  <input id="dob" type="date" required />
 </div>
 
 
-  <!-- Student Info Section -->
-  <section id="student" class="tab-section active">
-    <h2>Enter Student Details</h2>
-    <p id="studentSuccess" style="color: green; font-weight: bold;"></p>
+<!-- 👩‍🎓 Gender -->
+<select id="gender" required>
+  <option value="">Select Gender</option>
+  <option>Male</option>
+  <option>Female</option>
+  <option>Other</option>
+</select>
 
-    <form id="studentForm" action="">
-      <div class="form-grid">
-        <input type="text" name="firstname" placeholder="First Name" required>
-        <input type="text" name="lastname" placeholder="Last Name" required>
-        <input type="date" name="dob" required>
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="text" name="father" placeholder="Father's Name" required>
-        <input type="text" name="mother" placeholder="Mother's Name" required>
-        <input type="text" name="aadhar" placeholder="Aadhar Number" required>
-        <input type="text" name="community" placeholder="Community" required>
-        <input type="text" name="caste" placeholder="Caste" required>
-        <input type="text" name="gender" placeholder="Gender" required>
-        <input type="text" name="qualification10" placeholder="10th Qualification" required>
-        <input type="text" name="qualification12" placeholder="12th Qualification %" required>
-        <input type="text" name="income" placeholder="Income Level" required>
-      </div>
-      <button type="submit">Save Info</button>
+
+  <!-- 📧 Email auto-filled & disabled -->
+  <input id="email" type="email" placeholder="Email" readonly style="background:#f9f9f9; cursor:not-allowed;">
+
+  <input id="father" placeholder="Father's Name" required>
+  <input id="mother" placeholder="Mother's Name" required>
+  <input id="mobile" placeholder="Mobile Number" required>
+
+  <input id="community" placeholder="Community (SC/ST/BC/MBC/OC)" required>
+  <input id="caste" placeholder="Caste" required>
+
+  <select id="board" required onchange="toggleStateBoardFields()">
+    <option value="">Board of Education</option>
+    <option>State Board</option>
+    <option>CBSE</option>
+    <option>ICSE</option>
+  </select>
+
+  <div id="stateFields" style="display:none;">
+    <label>Govt/Govt-Aided School:</label><br />
+    <label><input type="radio" name="govtSchool" value="Yes"> Yes</label>
+    <label><input type="radio" name="govtSchool" value="No"> No</label><br><br>
+
+    <label>Studied 6th–12th in Tamil Medium:</label><br />
+    <label><input type="radio" name="tamilMedium" value="Yes"> Yes</label>
+    <label><input type="radio" name="tamilMedium" value="No"> No</label>
+  </div>
+
+  <div id="firstGradFields">
+    <label>First Graduate:</label><br />
+    <label><input type="radio" name="firstGrad" value="Yes"> Yes</label>
+    <label><input type="radio" name="firstGrad" value="No"> No</label>
+  </div>
+
+  <input id="mark10" type="number" placeholder="10th Marks (%)" required>
+  <input id="mark12" type="number" placeholder="12th Marks (%)" required>
+  <input id="income" type="number" placeholder="Annual Income" required>
+  <!-- ♿️ Disability Field -->
+<div id="disabilityFields">
+  <label>Is Disabled?</label><br />
+  <label><input type="radio" name="disabled" value="Yes"> Yes</label>
+  <label><input type="radio" name="disabled" value="No"> No</label>
+</div>
+
+</div>
+
+      <button type="submit" class="save-btn">Save & Match</button>
     </form>
+    <p id="studentSuccess"></p>
   </section>
 
-  <!-- Matched Scholarships Section -->
-  <section id="scholarships" class="tab-section">
+  <!-- Matched Scholarships -->
+  <section id="matched-scholarships" class="tab-content">
     <h2>Eligible Scholarships</h2>
-    <p>Click on a category to view matched scholarships:</p>
+    <div class="scholarships-row">
+      <div class="scholarship-box"><h3>Engineering</h3><ul id="engineering-list"></ul></div>
+      <div class="scholarship-box"><h3>Arts & Science</h3><ul id="arts-list"></ul></div>
+      <div class="scholarship-box"><h3>Medical</h3><ul id="medical-list"></ul></div>
+    </div>
+  </section>
 
-    <!-- Category Tabs -->
-    <div class="subtabs">
-      <button class="subtab-btn" onclick="showScholarshipCategory('arts-category')">Arts & Science</button>
-      <button class="subtab-btn" onclick="showScholarshipCategory('engineering-category')">Engineering</button>
-      <button class="subtab-btn" onclick="showScholarshipCategory('medical-category')">Medicals</button>
+  <!-- Scholarship Info -->
+  <section id="scholarship-info" class="tab-content">
+    <h2>Scholarship Info</h2>
+    <ul id="info-list"></ul>
+  </section>
+ 
+  <!-- 🌟 Student Profile Slide Panel -->
+<div id="profilePanel" class="profile-panel">
+  <div class="profile-content">
+    <button id="closeProfile" class="close-profile">×</button>
+
+    <div class="profile-header">
+      <i class="fas fa-user-graduate"></i>
+      <h2>Student Profile</h2>
     </div>
 
-    <!-- Scholarship Containers -->
-    <div id="arts-category" class="scholarship-category"></div>
-    <div id="engineering-category" class="scholarship-category"></div>
-    <div id="medical-category" class="scholarship-category"></div>
-  </section>
+    <div class="profile-body">
+      <div class="profile-item"><span>Name</span><p id="pName">-</p></div>
+      <div class="profile-item"><span>Email</span><p id="pEmail">-</p></div>
+      <div class="profile-item"><span>Gender</span><p id="pGender">-</p></div>
+      <div class="profile-item"><span>Community</span><p id="pCommunity">-</p></div>
+      <div class="profile-item"><span>Annual Income</span><p>₹<span id="pIncome">-</span></p></div>
+      <div class="profile-item"><span>Board</span><p id="pBoard">-</p></div>
+      <div class="profile-item"><span>First Graduate</span><p id="pFG">-</p></div>
+      <div class="profile-item"><span>Tamil Medium</span><p id="pTM">-</p></div>
+    </div>
 
-  <!-- Grievance Section -->
-  <section id="grievance" class="tab-section">
-    <h2>Submit Grievance</h2>
-    <form id="grievanceForm">
-      <textarea name="grievance" placeholder="Enter your grievance" required></textarea>
-      <button type="submit">Submit</button>
-    </form>
-  </section>
+    <div class="profile-footer">
+      <p>🎓 Keep shining — your hard work deserves every scholarship!</p>
+    </div>
+  </div>
+</div>
 
-  <!-- Script -->
+<!-- Font Awesome for icons -->
+<script src="https://kit.fontawesome.com/a2b5b5b1a4.js" crossorigin="anonymous"></script>
+
+
+
+  <script>
+    function toggleStateBoardFields() {
+      document.getElementById("stateFields").style.display =
+        document.getElementById("board").value === "State Board" ? "block" : "none";
+    }
+  </script>
+
   <script type="module" src="script.js"></script>
 </body>
 </html>

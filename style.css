@@ -1,274 +1,161 @@
-/* ===========================
-   BenefitBridge - style.css
-   Complete stylesheet for:
-     - index.html (login)
-     - dashboard.html (student form, matched scholarships, grievance)
-   Author: for Subash's portal
-   =========================== */
-
-/* ---------- Variables (colors, spacing) ---------- */
-:root{
-  --primary: #2d6cdf;       /* blue primary */
-  --primary-dark: #1e4ebb;
-  --accent: #f6a623;        /* accent / highlights */
-  --bg: #f5f7fa;            /* main background */
-  --card-bg: #ffffff;       /* card background */
-  --muted: #8a8f98;         /* muted text */
-  --danger: #d9534f;
-  --success: #2fa84f;
-  --border: rgba(0,0,0,0.06);
-  --max-width: 1100px;
-  --radius: 10px;
-  --gap: 14px;
-  --shadow: 0 6px 18px rgba(30,78,187,0.06);
+/* General Page Styling */
+body {
+ font-family: "Times New Roman", Times, serif;
+  background: #eef3ff;
+  margin: 0;
+  padding: 0;
 }
 
-/* ---------- Base ---------- */
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  background: linear-gradient(180deg, var(--bg) 0%, #eef3fb 100%);
-  color:#222;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  line-height:1.45;
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #6c0808;
+  color: rgb(238, 181, 181);
+  padding: 15px 30px;
 }
 
-/* Utility containers */
-.container {
-  width: 100%;
-  max-width: 420px;
-  margin: 72px auto;
-  padding: 22px;
-  background: var(--card-bg);
-  border-radius: 14px;
-  box-shadow: var(--shadow);
-  text-align: center;
-}
-
-/* Headings */
-h1,h2,h3,h4{margin:0 0 10px 0}
-h1{font-size:1.6rem}
-h2{font-size:1.25rem}
-h3{font-size:1rem}
-
-/* Simple text utilities */
-p{margin:0 0 10px}
-.small{font-size:0.9rem;color:var(--muted)}
-
-/* ---------- Header (dashboard) ---------- */
-header{
-  background: linear-gradient(90deg,var(--primary),var(--primary-dark));
-  color:#fff;
-  padding:14px 20px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  box-shadow: 0 6px 18px rgba(45,108,223,0.12);
-  position:sticky;
-  top:0;
-  z-index:30;
-}
-header h1{font-size:1.05rem;font-weight:600;display:flex;align-items:center;gap:8px}
-header button{
-  background: #fff;
-  color: var(--primary);
+header button {
+  background: rgb(231, 180, 180);
+  color: #660e0e;
   border: none;
-  padding:8px 12px;
-  border-radius:8px;
-  font-weight:600;
-  cursor:pointer;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.06);
-}
-header button:hover{transform:translateY(-1px);}
-
-/* ---------- Sections & Layout ---------- */
-.main {
-  width: 100%;
-  max-width: var(--max-width);
-  margin: 22px auto;
-  padding: 0 18px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
 }
 
-.form-section, .matched-section {
-  background: var(--card-bg);
-  border-radius: var(--radius);
-  padding: 18px;
-  box-shadow: var(--shadow);
-  margin: 18px auto;
-}
-
-/* ---------- Login box (index.html) ---------- */
-.login-box {
+/* Tabs */
+.tabs {
   text-align: center;
+  margin: 20px 0;
 }
-.login-box h2{margin-bottom:12px}
-.login-box input{
-  width: 92%;
-  padding: 10px 12px;
-  margin: 8px 0;
+
+.tab-btn {
+  background: #e5a6a6;
+  color: #791818;
+  padding: 10px 20px;
+  border: none;
   border-radius: 8px;
-  border: 1px solid var(--border);
-  font-size: 14px;
-}
-.login-box button{
-  width: 94%;
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-  background: var(--primary);
-  color: #fff;
-  font-weight:600;
-  cursor:pointer;
-  margin-top:12px;
-}
-.login-box button:hover{background:var(--primary-dark)}
-.tagline{color:var(--muted);margin-bottom:12px;font-size:0.95rem}
-
-/* ---------- Tabs (if used) ---------- */
-.sections{
-  display:flex;
-  gap:12px;
-  justify-content:center;
-  flex-wrap:wrap;
-  margin:18px 0;
-}
-.tab-btn{
-  background: #fff;
-  border: 1px solid var(--border);
-  padding:8px 14px;
-  border-radius: 10px;
-  cursor:pointer;
-  font-weight:600;
-  color:var(--primary);
-}
-.tab-btn.active{
-  background: linear-gradient(90deg,var(--primary),var(--primary-dark));
-  color:#fff;
-  border-color:transparent;
+  margin: 0 5px;
+  cursor: pointer;
+  font-weight: 600;
 }
 
-/* ---------- Form grid (used widely) ---------- */
-.form-grid{
-  display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: var(--gap);
-  align-items:start;
-}
-input[type="text"], input[type="email"], input[type="date"], input[type="number"], select, textarea {
-  width:100%;
-  padding:10px 12px;
-  border-radius:10px;
-  border:1px solid var(--border);
-  font-size:14px;
-  background: #fff;
-}
-textarea{min-height:110px;resize:vertical}
-button[type="submit"], button.primary {
-  background: var(--primary);
-  color: #fff;
-  border:none;
-  padding:10px 14px;
-  border-radius:10px;
-  cursor:pointer;
-  font-weight:700;
-}
-button[type="submit"]:hover { background: var(--primary-dark); transform: translateY(-2px); }
-
-/* Message styles */
-.msg{margin-top:10px;font-weight:600}
-.msg.success{color:var(--success)}
-.msg.error{color:var(--danger)}
-
-/* ---------- Scholarships UI ---------- */
-.scholarship-sections {
-  display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 18px;
-  margin-top:12px;
+.tab-btn.active {
+  background: #e29a9a;
+  color: rgb(92, 18, 18);
 }
 
-.category{
+/* Content */
+.tab-content {
+  display: none;
+  background: white;
   border-radius: 12px;
-  padding:12px;
-  background: linear-gradient(180deg,#ffffff,#fbfdff);
-  border: 1px solid var(--border);
-  min-height:140px;
-  box-shadow: 0 8px 20px rgba(16,58,100,0.03);
-}
-.category h3{margin:0 0 8px;color:var(--primary);font-size:1.05rem}
-
-/* list container & fallback */
-.scholarship-list{display:flex;flex-direction:column;gap:10px}
-.scholarship-list p{color:var(--muted);margin:0}
-
-/* card */
-.scholarship-card{
-  background:#fff;
-  border-radius:10px;
-  padding:12px;
-  border-left: 4px solid var(--primary);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-}
-.scholarship-card h4{margin:0 0 6px;color:var(--primary);font-size:1rem}
-.scholarship-card p{margin:4px 0;color:#333;font-size:0.95rem}
-.scholarship-card .meta{font-size:0.85rem;color:var(--muted)}
-
-/* ---------- Small UI helpers ---------- */
-.kv{display:flex;gap:8px;align-items:center}
-.badge{
-  display:inline-block;
-  background:var(--accent);
-  color:#fff;
-  padding:4px 8px;
-  border-radius:999px;
-  font-weight:700;
-  font-size:0.8rem;
+  padding: 30px 40px;
+  margin: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
-/* ---------- Grievance form small style ---------- */
-.grievance-form .form-grid { grid-template-columns: 1fr; }
-.grievance-form textarea{min-height:140px}
-
-/* ---------- Responsive: stacked on small screens ---------- */
-@media (max-width: 800px){
-  .container{margin:40px 16px}
-  header{flex-direction:column;gap:10px;align-items:flex-start;padding:16px}
-  .form-grid{grid-template-columns: 1fr}
-  .scholarship-sections{grid-template-columns:1fr}
+.tab-content.active {
+  display: block;
 }
 
-/* ---------- Footer (optional) ---------- */
-.site-footer{
-  text-align:center;
-  padding:22px;
-  color:var(--muted);
-  font-size:0.95rem;
+/* Form Grid */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px 30px;
 }
 
-/* ---------- Focus & accessibility ---------- */
-input:focus, select:focus, textarea:focus, button:focus{
-  outline:none;
-  box-shadow: 0 0 0 4px rgba(45,108,223,0.08);
-  border-color: rgba(45,108,223,0.35);
+.form-grid input,
+.form-grid select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 15px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
-/* ---------- Tiny tweaks for visuals ---------- */
-a{color:var(--primary);text-decoration:none}
-a:hover{text-decoration:underline}
-/* Highlight subtab/category with matched scholarships */
-.tab-btn.has-results {
-  background-color: #4caf50; /* green for categories with results */
-  color: white;
+/* Buttons */
+.save-btn {
+  margin-top: 25px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  background: #6a0f0f;
+  color: rgb(216, 135, 135);
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1rem;
 }
 
-.tab-btn.has-results:hover {
-  background-color: #45a049;
+.save-btn:hover {
+  background: #172554;
 }
 
-.subtab-btn.has-results {
-  border-bottom: 2px solid #4caf50;
+/* Scholarships */
+.scholarship-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 25px;
+  margin-top: 25px;
+}
+
+.scholarship-box {
+  background: rgb(189, 111, 111);
+  flex: 1 1 calc(33% - 30px);
+  min-width: 300px;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+}
+
+.scholarship-box li {
+  background: #e0e7ff;
+  padding: 10px;
+  margin: 6px 0;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+.scholarship-box li:hover {
+  background: #570c0c;
+  color: rgb(191, 115, 115);
+}
+
+/* Login */
+.login-container {
+  text-align: center;
+  margin-top: 80px;
+}
+
+.login-row {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.login-row input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  width: 220px;
+}
+
+.login-box button {
+  margin-top: 20px;
+  background: #76171c;
+  color: rgb(204, 130, 130);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
 }

@@ -4,22 +4,314 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BenefitBridge | Login</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="container">
-    <h1>BenefitBridge</h1>
-    <p class="tagline">Career & Scholarship Guidance Portal</p>
 
-    <div class="login-box">
-      <h2>Login</h2>
-      <input type="email" id="username" placeholder="Email" />
-      <input type="password" id="password" placeholder="Password" />
-      <button id="loginBtn">Login</button>
-      <p id="loginError" style="color: red; margin-top: 10px;"></p>
+  <style>
+    /* 🌟 Base Styling */
+    /* 🌟 Base Styling */
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  height: 100vh;
+  display: flex;
+  background: linear-gradient(135deg, #fff4f4, #ffeaea);
+  color: #701010;
+  overflow: hidden;
+}
+
+.login-wrapper {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+/* 🖼️ Left Section */
+.login-left {
+  flex: 6;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 8%;
+  overflow: hidden;
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+  box-shadow: 5px 0 25px rgba(0, 0, 0, 0.15);
+}
+
+.login-left img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(65%) saturate(115%);
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.25));
+  z-index: 1;
+}
+
+.text-box {
+  z-index: 2;
+  color: #fff;
+  max-width: 460px;
+  animation: fadeInUp 1s ease-in-out;
+  margin-top: 20px;
+}
+
+.text-box h1 {
+  font-size: 2.8rem;
+  font-weight: 800;
+  margin-bottom: 15px;
+  letter-spacing: 0.5px;
+  text-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+}
+
+.text-box p {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: #f8eaea;
+  text-align: justify;
+  max-width: 420px;
+  margin: 0;
+  word-spacing: 1px;
+  letter-spacing: 0.3px;
+  opacity: 0.95;
+}
+
+.text-box strong {
+  color: #ffdddd;
+  font-weight: 700;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 💻 Right Section */
+.login-right {
+  flex: 4;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 60px;
+  background: #fff;
+  padding-right: 60px; /* ✅ Added space on right side */
+}
+
+.login-card {
+  width: 85%;
+  max-width: 400px;
+  padding: 45px 35px;
+  background: #ffffff;
+  border-radius: 24px;
+  border: 2px dashed #b01b1b; /* ✅ Changed from solid to dashed */
+  box-shadow: 0 8px 28px rgba(176, 27, 27, 0.15);
+  text-align: center;
+  transition: 0.3s ease;
+}
+
+.login-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 28px rgba(176, 27, 27, 0.25);
+}
+
+.login-card h2 {
+  margin-bottom: 25px;
+  color: #7d0d0d;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.login-card input {
+  width: 100%;
+  padding: 13px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: 1.5px solid #d8b3b3;
+  font-size: 15px;
+  background: #fff9f9;
+  transition: 0.2s;
+}
+
+.login-card input:focus {
+  border-color: #b01b1b;
+  outline: none;
+  box-shadow: 0 0 6px rgba(176, 27, 27, 0.3);
+}
+
+.login-card button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #7d0d0d, #b01b1b);
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 10px;
+}
+
+.login-card button:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(90deg, #a31212, #c11f1f);
+  box-shadow: 0 5px 15px rgba(125, 13, 13, 0.3);
+}
+
+.forgot-password {
+  margin-top: 12px;
+  display: block;
+  color: #b01b1b;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: 0.3s;
+}
+
+.forgot-password:hover {
+  color: #7d0d0d;
+  text-decoration: underline;
+}
+
+.login-card .error {
+  color: #d93025;
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+.tagline {
+  margin-top: 12px;
+  color: #7a1414;
+  font-size: 0.9rem;
+  opacity: 0.85;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+}
+
+/* 📱 Responsive */
+@media (max-width: 900px) {
+  body {
+    flex-direction: column;
+    height: auto;
+    overflow-y: auto;
+  }
+  .login-wrapper { flex-direction: column; }
+  .login-left {
+    flex: none;
+    width: 100%;
+    height: 320px;
+    justify-content: center;
+    text-align: center;
+    border-radius: 0;
+    padding: 20px;
+  }
+  .text-box { max-width: 90%; }
+  .login-right {
+    justify-content: center;
+    padding: 20px;
+  }
+  .login-card {
+    width: 90%;
+    border-radius: 14px;
+    margin: 20px 0;
+  }
+}
+
+  </style>
+</head>
+
+<body>
+  <div class="login-wrapper">
+    <!-- Left Side -->
+    <div class="login-left">
+      <img src="benefit.png" alt="BenefitBridge Illustration" />
+      <div class="overlay"></div>
+      <div class="text-box">
+        <h1>Welcome to <strong>BenefitBridge</strong></h1>
+        <p>
+          Discover scholarships tailored to your achievements and background.  
+          <strong>BenefitBridge</strong> connects you with the right  
+          opportunities to build a brighter academic future.
+        </p>
+      </div>
+    </div>
+
+    <!-- Right Side -->
+    <div class="login-right">
+      <form id="loginForm" class="login-card">
+        <h2>Login to Continue</h2>
+        <input type="email" id="username" placeholder="Email Address" required />
+        <input type="password" id="password" placeholder="Password" required />
+        <button id="loginBtn" type="submit">Login</button>
+
+        <!-- 🔑 Forgot Password -->
+        <a href="#" id="forgotPassword" class="forgot-password">Forgot Password?</a>
+
+        <p id="loginError" class="error"></p>
+        <p class="tagline">Career & Scholarship Guidance Portal</p>
+      </form>
     </div>
   </div>
 
-  <script type="module" src="script.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD05XaBvC5fMUVLMZHhewJDzWJhlDTRmbg",
+      authDomain: "miniproject-2db9d.firebaseapp.com",
+      projectId: "miniproject-2db9d",
+      storageBucket: "miniproject-2db9d.appspot.com",
+      messagingSenderId: "1069068203873",
+      appId: "1:1069068203873:web:7996ff9c1b1c2ab03f7720",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // 🔹 Login
+    const loginForm = document.getElementById("loginForm");
+    const errorMsg = document.getElementById("loginError");
+
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      errorMsg.textContent = "";
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        window.location.href = "dashboard.html";
+      } catch (err) {
+        errorMsg.textContent = "❌ Invalid email or password!";
+      }
+    });
+
+    // 🔹 Forgot Password
+    document.getElementById("forgotPassword").addEventListener("click", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("username").value.trim();
+      if (!email) {
+        alert("Please enter your registered email to reset your password.");
+        return;
+      }
+
+      try {
+        await sendPasswordResetEmail(auth, email);
+        alert("✅ Password reset link sent to your email.");
+      } catch (error) {
+        alert("❌ Error sending reset link. Please check the email address.");
+      }
+    });
+  </script>
 </body>
 </html>

@@ -1,23 +1,19 @@
 // ======================
-// Firebase Initialization
+// 🔥 Firebase Initialization
 // ======================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-analytics.js";
 import {
   getAuth,
-  signInWithEmailAndPassword,
-  signOut
+  signOut,
+  onAuthStateChanged,
 } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 import {
   getFirestore,
   collection,
   addDoc,
-  getDocs
+  getDocs,
 } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 
-// ======================
-// Firebase Config
-// ======================
 const firebaseConfig = {
   apiKey: "AIzaSyD05XaBvC5fMUVLMZHhewJDzWJhlDTRmbg",
   authDomain: "miniproject-2db9d.firebaseapp.com",
@@ -25,48 +21,31 @@ const firebaseConfig = {
   storageBucket: "miniproject-2db9d.appspot.com",
   messagingSenderId: "1069068203873",
   appId: "1:1069068203873:web:7996ff9c1b1c2ab03f7720",
-  measurementId: "G-WQ18V8TX11"
 };
 
-// ======================
-// Firebase Init
-// ======================
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-console.log("✅ Firebase Initialized!");
+console.log("✅ Firebase initialized successfully!");
 
 // ======================
-// Login Function
+// 📧 Auto-fill Logged-in Email
 // ======================
-const loginBtn = document.getElementById("loginBtn");
-const loginError = document.getElementById("loginError");
-
-if (loginBtn) {
-  loginBtn.addEventListener("click", async () => {
-    const email = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
-
-    if (!email || !password) {
-      loginError.textContent = "Please enter both email and password.";
-      return;
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    const emailField = document.getElementById("email");
+    if (emailField) {
+      emailField.value = user.email || "";
+      emailField.readOnly = true;
+      emailField.style.background = "#f8f8f8";
+      emailField.style.cursor = "not-allowed";
     }
-
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      console.log("Logged in:", userCredential.user.email);
-      window.location.href = "dashboard.html";
-    } catch (error) {
-      console.error(error);
-      loginError.textContent = error.message;
-    }
-  });
-}
+  }
+});
 
 // ======================
-// Logout Function
+// 🚪 Logout Function
 // ======================
 const logoutBtn = document.getElementById("logoutBtn");
 if (logoutBtn) {
@@ -77,200 +56,301 @@ if (logoutBtn) {
 }
 
 // ======================
-// Student Form Save
+// 🧾 Save Student Form + Match Scholarships
 // ======================
 const studentForm = document.getElementById("studentForm");
-const successMsg = document.getElementById("studentSuccess");
+let lastStudent = null;
 
 if (studentForm) {
   studentForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    successMsg.textContent = "⏳ Saving data... Please wait.";
+    e.preventDefault(); // ⛔️ stop refresh before saving
 
-    const formData = new FormData(studentForm);
-    const data = Object.fromEntries(formData.entries());
+    const student = {
+      firstname: firstname.value.trim(),
+      lastname: lastname.value.trim(),
+      dob: dob.value,
+      gender: gender.value,
+      email: email.value,
+      father: father.value,
+      mother: mother.value,
+      mobile: mobile.value,
+      community: community.value.toLowerCase().trim(),
+      caste: caste.value.toLowerCase().trim(),
+      income: Number(income.value || 0),
+      qualification12: Number(mark12.value || 0),
+      qualificationBoard: board.value.trim(),
+      disabled:
+        document.querySelector('input[name="disabled"]:checked')?.value || "No",
+      firstGraduate:
+        document.querySelector('input[name="firstGrad"]:checked')?.value || "No",
+      govtSchool:
+        document.querySelector('input[name="govtSchool"]:checked')?.value || "No",
+      tamilMedium:
+        document.querySelector('input[name="tamilMedium"]:checked')?.value || "No",
+    };
 
     try {
-      // Normalize input
-      const finalData = {
-        ...data,
-        caste: (data.caste || "").trim(),
-        community: (data.community || "").trim(),
-        gender: (data.gender || "").trim(),
-        income: Number(data.income),
-        qualification12: Number(data.qualification12),
-        timestamp: new Date()
-      };
+      console.log("🧾 Saving student to Firestore...", student);
+      await addDoc(collection(db, "student-form"), student);
+      console.log("✅ Saved successfully!");
 
-      // Save to Firestore
-      await addDoc(collection(db, "student-form"), finalData);
-
-      successMsg.textContent = "✅ Student details saved successfully!";
-      studentForm.reset();
-
-      // Show matched scholarships immediately
-      showMatchedScholarships(finalData);
-
-    } catch (error) {
-      console.error("Error saving form:", error);
-      successMsg.textContent = "❌ Failed to save data. Check console for details.";
+      lastStudent = student;
+      const msg = document.getElementById("studentSuccess");
+      msg.textContent = "✅ Student details saved successfully!";
+      msg.style.color = "green";
+      msg.style.fontWeight = "600";
+      matchScholarships(student);
+    } catch (err) {
+      console.error("❌ Firestore Save Error:", err);
+      const msg = document.getElementById("studentSuccess");
+      msg.textContent = "❌ Failed to save student. Check console for details.";
+      msg.style.color = "red";
     }
   });
 }
 
-// ======================
-// Eligibility Check
-// ======================
-function isEligible(studentData, s) {
-  const studentCaste = (studentData.caste || "").trim().toLowerCase();
-  const studentCommunity = (studentData.community || "").trim().toLowerCase();
-  const studentGender = (studentData.gender || "").trim().toLowerCase();
-
-  const requiredCaste = (s.requiredCaste || "").trim().toLowerCase();
-  const requiredCommunity = (s.requiredCommunity || "").trim().toLowerCase();
-  const requiredGender = (s.gender || "").trim().toLowerCase();
-
-  const casteEligible =
-    requiredCaste === "all" ||
-    requiredCaste.split("/").map(c => c.trim().toLowerCase()).includes(studentCaste);
-
-  const communityEligible =
-    !requiredCommunity ||
-    requiredCommunity === "all" ||
-    requiredCommunity.split("/").map(c => c.trim().toLowerCase()).includes(studentCommunity);
-
-  const genderEligible =
-    !requiredGender || requiredGender === "all" || requiredGender === studentGender;
-
-  const incomeEligible =
-    Number(studentData.income) >= Number(s.minIncome) &&
-    Number(studentData.income) <= Number(s.maxIncome);
-
-  const qualEligible = Number(studentData.qualification12) >= Number(s.minQualification12);
-
-  return casteEligible && communityEligible && genderEligible && incomeEligible && qualEligible;
-}
 
 // ======================
-// Map Firestore categories to HTML container IDs
+// 🎯 Scholarship Matching Logic
 // ======================
-const categoryIdMap = {
-  "Arts & Science": "arts-category",
-  "Engineering": "engineering-category",
-  "Medicals": "medical-category"
-};
+async function matchScholarships(student) {
+  const snap = await getDocs(collection(db, "scholarships"));
+  const eng = [],
+    arts = [],
+    med = [];
 
-// ======================
-// Show Matched Scholarships
-// ======================
-async function showMatchedScholarships(studentData) {
-  const normalizedData = {
-    ...studentData,
-    caste: (studentData.caste || "").trim().toLowerCase(),
-    community: (studentData.community || "").trim().toLowerCase(),
-    gender: (studentData.gender || "").trim().toLowerCase(),
-    income: Number(studentData.income),
-    qualification12: Number(studentData.qualification12)
-  };
-
-  document.querySelectorAll(".scholarship-category").forEach(cat => (cat.innerHTML = ""));
-  document.querySelectorAll(".subtab-btn").forEach(btn => btn.classList.remove("has-results"));
-
-  const scholarshipsCol = collection(db, "scholarships");
-  const snapshot = await getDocs(scholarshipsCol);
-  const matched = [];
-  const categoriesWithResults = new Set();
-
-  snapshot.forEach(doc => {
+  snap.forEach((doc) => {
     const s = doc.data();
-    if (isEligible(normalizedData, s)) {
-      matched.push(s);
-
-      const containerId = categoryIdMap[s.category];
-      if (!containerId) return;
-      categoriesWithResults.add(containerId);
-
-      const container = document.getElementById(containerId);
-      if (!container) return;
-
-      const div = document.createElement("div");
-      div.classList.add("scholarship-item");
-      div.innerHTML = `
-        <strong>${s.name}</strong><br>
-        ${s.eligibilityNote || ""}<br>
-        <em>Caste: ${s.requiredCaste || "All"}</em> | 
-        <em>Community: ${s.requiredCommunity || "All"}</em> | 
-        <em>Min 12th %: ${s.minQualification12}</em> | 
-        <em>Income Range: ${s.minIncome} - ${s.maxIncome}</em>
-      `;
-      container.appendChild(div);
+    if (isEligible(student, s)) {
+      const cat = (s.category || "").toLowerCase();
+      if (cat.includes("engineering")) eng.push(s);
+      if (cat.includes("arts")) arts.push(s);
+      if (cat.includes("medical")) med.push(s);
     }
   });
 
-  if (matched.length === 0) {
-    document.querySelectorAll(".scholarship-category").forEach(
-      cat => (cat.innerHTML = "<em>No scholarships matched your profile.</em>")
-    );
+  displayScholarships("engineering-list", eng);
+  displayScholarships("arts-list", arts);
+  displayScholarships("medical-list", med);
+  showTab("matched-scholarships");
+}
+
+// ======================
+// ✅ Eligibility Checking
+// ======================
+function isEligible(st, s) {
+  const studentCommunity = (st.community || "").trim().toLowerCase();
+  const studentCaste = (st.caste || "").trim().toLowerCase();
+  const requiredCommunity = (s.requiredCommunity || "").trim().toLowerCase();
+  const requiredCaste = (s.requiredCaste || "").trim().toLowerCase();
+  const scholarshipName = (s.name || "").trim().toLowerCase();
+
+  const communityList = requiredCommunity.split(/[\/,\s]+/).filter(Boolean);
+  const casteList = requiredCaste.split(/[\/,\s]+/).filter(Boolean);
+
+  const communityOK =
+    requiredCommunity === "all" || communityList.includes(studentCommunity);
+
+  const casteOK =
+    requiredCaste === "all" || casteList.includes(studentCaste) || communityOK;
+
+  const genderOK =
+    s.gender === "All" || s.gender.toLowerCase() === st.gender.toLowerCase();
+
+  const incomeOK =
+    st.income >= (s.minIncome || 0) &&
+    st.income <= (s.maxIncome || Infinity);
+  const markOK = st.qualification12 >= (s.minQualification12 || 0);
+  const boardOK =
+    s.qualificationBoard === "Any" ||
+    (s.qualificationBoard || "")
+      .toLowerCase()
+      .includes((st.qualificationBoard || "").toLowerCase());
+
+  // 7.5% Quota rule
+  if (scholarshipName.includes("7.5% quota")) {
+    const isStateBoard = (st.qualificationBoard || "")
+      .toLowerCase()
+      .includes("state");
+    const isTamilMedium = (st.tamilMedium || "").toLowerCase() === "yes";
+    if (!isStateBoard || !isTamilMedium) return false;
+  }
+
+  if (
+    scholarshipName.includes("tamil medium") &&
+    (st.tamilMedium || "").toLowerCase() !== "yes"
+  )
+    return false;
+
+  if (
+    scholarshipName.includes("first graduate") &&
+    (st.firstGraduate || "").toLowerCase() !== "yes"
+  )
+    return false;
+
+  return communityOK && casteOK && genderOK && incomeOK && markOK && boardOK;
+}
+
+// ======================
+// 🎓 Display Matched Scholarships
+// ======================
+function displayScholarships(id, arr) {
+  const ul = document.getElementById(id);
+  if (!ul) return;
+  ul.innerHTML = "";
+
+  if (!arr.length) {
+    ul.innerHTML = "<li>No eligible scholarships found.</li>";
     return;
   }
 
-  categoriesWithResults.forEach(catId => {
-    const btn = document.querySelector(`.subtab-btn[onclick="showScholarshipCategory('${catId}')"]`);
-    if (btn) btn.classList.add("has-results");
-  });
-
-  const firstCategory = [...categoriesWithResults][0];
-  if (firstCategory) showScholarshipCategory(firstCategory);
-}
-
-// ======================
-// Grievance Form
-// ======================
-const grievanceForm = document.getElementById("grievanceForm");
-if (grievanceForm) {
-  grievanceForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    alert("Your grievance has been submitted!");
-    grievanceForm.reset();
+  arr.forEach((s) => {
+    const li = document.createElement("li");
+    li.textContent = s.name;
+    li.style.transition = "0.3s";
+    li.addEventListener("mouseenter", () => (li.style.transform = "scale(1.03)"));
+    li.addEventListener("mouseleave", () => (li.style.transform = "scale(1)"));
+    li.addEventListener("click", () => openBottomPanel(s));
+    ul.appendChild(li);
   });
 }
 
 // ======================
-// Tab Functions
+// 🎬 Slide-Up Bottom Consolidation Panel
 // ======================
-window.showSection = function(sectionId) {
-  document.querySelectorAll(".tab-section").forEach(s => s.classList.remove("active"));
-  document.getElementById(sectionId).classList.add("active");
+const bottomPanel = document.getElementById("bottomPanel");
+const bottomDetail = document.getElementById("bottomDetail");
+const closeBottomPanel = document.getElementById("closeBottomPanel");
 
-  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-  document.querySelector(`.tab-btn[onclick="showSection('${sectionId}')"]`).classList.add("active");
-};
+function openBottomPanel(s) {
+  // Base scholarship detail card
+  bottomDetail.innerHTML = `
+    <div class="scholarship-detail" style="
+        background:#fff; 
+        border-radius:20px; 
+        padding:25px; 
+        box-shadow:0 5px 25px rgba(0,0,0,0.15);
+        border-left:6px solid #b01b1b;
+        transition: all 0.4s ease;">
+      <h3 style="color:#b01b1b;margin-bottom:10px;">${s.name}</h3>
+      <p><strong>📖 Category:</strong> ${s.category}</p>
+      <p><strong>💰 Benefits:</strong> ${s.benefits}</p>
+      <p><strong>📜 Certificates:</strong> ${s.requiredCertificates}</p>
+      <p><strong>🧾 Eligibility:</strong> ${s.eligibilityNote}</p>
+      <p><strong>🧩 Application Type:</strong> 
+        <span style="
+          display:inline-block;
+          padding:4px 10px;
+          border-radius:8px;
+          font-weight:600;
+          color:white;
+          animation: glow 1.2s ease-in-out infinite alternate;
+          background:${s.applyType === 'Auto Applied by College' ? '#118b28' : 
+                      s.applyType === 'Apply through College' ? '#f0a500' : '#b01b1b'};">
+          ${s.applyType || 'Not Specified'}
+        </span>
+      </p>
+      <p><a href="${s.applyLink}" target="_blank">🌐 Apply Here</a></p>
+    </div>
+  `;
 
-window.showScholarshipCategory = function(catId) {
-  document.querySelectorAll(".scholarship-category").forEach(c => c.classList.remove("active"));
-  document.getElementById(catId).classList.add("active");
-
-  document.querySelectorAll(".subtab-btn").forEach(b => b.classList.remove("active"));
-  document.querySelector(`.subtab-btn[onclick="showScholarshipCategory('${catId}')"]`).classList.add("active");
-};
-
-console.log("🚀 All scripts loaded and ready!");
-
-// ======================
-// Add All Scholarships to Firestore
-// ======================
-async function addAllScholarships() {
-  const scholarships = [
-    // (Add the same 15 scholarship objects you already have)
-  ];
-
-  for (const s of scholarships) {
-    await addDoc(collection(db, "scholarships"), s);
-    console.log("Added scholarship:", s.name);
+  // ✅ Append extra instructions only if applyType = "Apply through College"
+  if (s.applyType === "Apply through College") {
+    bottomDetail.innerHTML += `
+      <div class="manual-apply-guide" style="
+        background: linear-gradient(135deg, #fff8e1, #fff3d6);
+        border: 1.5px dashed #b87400;
+        border-radius: 12px;
+        padding: 18px;
+        margin-top: 18px;
+        color: #5a1a1a;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+      ">
+        <h4 style="margin-top: 0; color:#b01b1b;">📝 How to Apply Through College</h4>
+        <ol style="margin: 10px 0 0 18px; line-height: 1.6;">
+          <li>Visit your <b>College Scholarship Cell / Office</b>.</li>
+          <li>Submit required documents — Community, Income, Mark Sheets, Bank Passbook copy, etc.</li>
+          <li>Your <b>Nodal Officer</b> will verify and forward your application to the respective department.</li>
+          <li>You can track your application status through the college office after submission.</li>
+        </ol>
+        <p style="margin-top: 10px; color:#7a2a2a;">
+          <b>⚠️ Note:</b> These scholarships cannot be applied online directly by students.
+        </p>
+      </div>
+    `;
   }
 
-  alert("✅ All scholarships added to Firestore!");
+  bottomPanel.classList.add("active");
 }
 
-// Uncomment **once** to add scholarships
-// addAllScholarships();
+// Close panel
+if (closeBottomPanel) {
+  closeBottomPanel.addEventListener("click", () =>
+    bottomPanel.classList.remove("active")
+  );
+}
+
+
+// ======================
+// 📘 Scholarship Info Tab (Names Only)
+// ======================
+async function loadAllScholarships() {
+  const snap = await getDocs(collection(db, "scholarships"));
+  const infoList = document.getElementById("info-list");
+  infoList.innerHTML = "";
+  snap.forEach((doc) => {
+    const s = doc.data();
+    const li = document.createElement("li");
+    li.textContent = s.name;
+    li.style.transition = "0.3s";
+    li.addEventListener("mouseenter", () => (li.style.transform = "scale(1.03)"));
+    li.addEventListener("mouseleave", () => (li.style.transform = "scale(1)"));
+    infoList.appendChild(li);
+  });
+}
+loadAllScholarships();
+
+// ======================
+// 🔄 Tab Switching
+// ======================
+const tabs = document.querySelectorAll(".tab-btn");
+const sections = document.querySelectorAll(".tab-content");
+
+tabs.forEach((b) => b.addEventListener("click", () => showTab(b.dataset.tab)));
+
+function showTab(id) {
+  tabs.forEach((b) => b.classList.toggle("active", b.dataset.tab === id));
+  sections.forEach((s) => s.classList.toggle("active", s.id === id));
+}
+
+// ======================
+// 👤 STUDENT PROFILE PANEL (Stylish)
+// ======================
+const profileBtn = document.getElementById("profileBtn");
+const profilePanel = document.getElementById("profilePanel");
+const closeProfile = document.getElementById("closeProfile");
+
+if (profileBtn) {
+  profileBtn.addEventListener("click", () => {
+    if (lastStudent) {
+      document.getElementById("pName").textContent =
+        `${lastStudent.firstname} ${lastStudent.lastname}`;
+      document.getElementById("pEmail").textContent = lastStudent.email;
+      document.getElementById("pGender").textContent = lastStudent.gender;
+      document.getElementById("pCommunity").textContent = lastStudent.community;
+      document.getElementById("pIncome").textContent = lastStudent.income;
+      document.getElementById("pBoard").textContent = lastStudent.qualificationBoard;
+      document.getElementById("pFG").textContent = lastStudent.firstGraduate;
+      document.getElementById("pTM").textContent = lastStudent.tamilMedium;
+    }
+    profilePanel.classList.add("active");
+  });
+}
+
+if (closeProfile) {
+  closeProfile.addEventListener("click", () => {
+    profilePanel.classList.remove("active");
+  });
+}
+
+console.log("🚀 Script fully loaded with applyType tags + glow + all features ready!");

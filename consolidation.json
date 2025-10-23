@@ -1,0 +1,38 @@
+[
+  {
+    "name": "AICTE Pragati Scholarship",
+    "benefits": "₹50,000 per year for female students pursuing technical education.",
+    "requiredCertificates": "Aadhaar card, Admission proof, Bonafide certificate.",
+    "applyLink": "https://aicte-pragati-saksham.gov.in"
+  },
+  {
+    "name": "7.5% Quota Scholarship",
+    "benefits": "Full tuition fee waiver for Govt. school students under 7.5% reservation.",
+    "requiredCertificates": "Community certificate, Income certificate, School Bonafide.",
+    "applyLink": "https://www.tn.gov.in/scholarships"
+  },
+  {
+    "name": "Post Matric Scholarship",
+    "benefits": "Covers tuition, exam fees, and maintenance allowance.",
+    "requiredCertificates": "Community certificate, Income certificate, Aadhaar card.",
+    "applyLink": "https://scholarships.gov.in/"
+  },
+  {
+    "name": "EVR Nagammai Memorial Scholarship",
+    "benefits": "₹25,000 per year for female postgraduate Arts & Science students.",
+    "requiredCertificates": "Degree mark sheet, Income certificate, Aadhaar card.",
+    "applyLink": "https://www.tn.gov.in/scholarships"
+  },
+  {
+    "name": "Minority Arts Scholarship",
+    "benefits": "Tuition fee waiver for minority students in Arts courses.",
+    "requiredCertificates": "Minority certificate, Income proof, Bonafide certificate.",
+    "applyLink": "https://minorityaffairs.gov.in"
+  },
+  {
+    "name": "AICTE Saksham Scholarship",
+    "benefits": "₹50,000 per year for differently-abled technical students.",
+    "requiredCertificates": "Disability certificate, Admission proof, Aadhaar card.",
+    "applyLink": "https://aicte-pragati-saksham.gov.in"
+  }
+]
