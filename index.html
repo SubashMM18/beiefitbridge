@@ -363,6 +363,51 @@ body {
   /* ensure small screens show scroll comfortably */
   body, html { -webkit-overflow-scrolling: touch; }
 }
+/* ---- Scale login-right + login-card slightly smaller on mobile ---- */
+@media (max-width: 900px) {
+
+  /* Scale the whole right panel */
+  .login-right {
+    transform: scale(0.92);     /* zoom down */
+    transform-origin: top center;
+  }
+
+  /* Fix positioning so it doesn't shift right */
+  .login-card {
+    margin-top: -10px;
+  }
+}
+
+/* Very small phones */
+@media (max-width: 450px) {
+  .login-right {
+    transform: scale(0.88);     /* more zoom down */
+  }
+  .login-card {
+    margin-top: -14px;
+  }
+}
+.login-card {
+  padding: 32px 26px;   /* slightly reduced */
+}
+.login-card {
+  padding: 32px 26px;   /* slightly reduced */
+}
+/* ==== FIX INPUT BOX WIDTH + GAP ==== */
+.login-card input {
+  width: 96%;               /* reduce width */
+  margin-left: 2%;          /* center perfectly */
+}
+
+/* ==== ADJUST LEFT AND RIGHT WIDTH FOR BALANCE ==== */
+.login-left {
+  flex: 5.5 !important;     /* reduce the left section width */
+}
+
+.login-right {
+  flex: 4.5 !important;     /* increase right section width */
+}
+
 
 
 
