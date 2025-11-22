@@ -1,3 +1,4 @@
+@ -1,689 +1,4 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -684,110 +685,11 @@ body { overflow-y: auto; }
 
 /* small improvements to reduce input label overlap near date field */
 @media (max-width: 420px) {
+@ -687,107 +687,6 @@ body { overflow-y: auto; }
   .dob-wrapper label { font-size: 13px; margin-left: 4px; }
   #firstname, #lastname { height: 44px; }
 }
-/* ---------- Mobile improvements for dashboard.html (paste into <style>) ---------- */
-/* This overrides layout to a single column form and tidy header for phones */
-@media (max-width: 900px) {
-  header {
-    padding: 12px 16px;
-    align-items: center;
-  }
-  header h1 { font-size: 1.2rem; gap: 8px; }
-  header h1 img { height: 36px; width: 36px; }
-
-  .header-right { gap: 8px; }
-  #profileBtn, #logoutBtn { padding: 8px 10px; font-size: 0.85rem; }
-
-  /* Tabs: stacked and compact */
-  .tabs {
-    padding: 8px 12px;
-  }
-  .tab-btn {
-    padding: 8px 12px;
-    font-size: 0.95rem;
-    border-radius: 8px;
-  }
-  .tab-btn + .tab-btn { margin-left: 8px; }
-
-  /* form grid -> single column flow for mobile */
-  .form-grid {
-    display: grid;
-    grid-template-columns: 1fr;  /* single column */
-    gap: 14px;
-    margin-top: 16px;
-  }
-
-  /* Inputs full width and consistent height */
-  input, select, .date-input {
-    width: 100%;
-    padding: 12px;
-    border-radius: 10px;
-    font-size: 15px;
-    box-sizing: border-box;
-  }
-
-  /* DOB wrapper: remove negative margins */
-  .dob-wrapper { margin-top: 0; }
-
-  /* First name / last name already single column - keep spacing */
-  #firstname, #lastname { height: 46px; }
-
-  /* Student profile panel becomes 100% width from right */
-  .profile-panel {
-    width: 100%;
-    max-width: 100%;
-    right: -100%;
-    border-radius: 0;
-    border-left: none;
-    padding: 22px;
-    box-shadow: 0 0 30px rgba(176,27,27,0.12);
-  }
-  .profile-panel.active { right: 0; }
-
-  /* Scholarships layout: stack boxes vertically */
-  .scholarships-row {
-    display: block;
-  }
-  .scholarship-box {
-    margin: 12px auto;
-    width: calc(100% - 32px);
-    min-width: auto;
-    border-radius: 12px;
-    padding: 16px;
-  }
-
-  /* Bottom panel (scholarship details): full width on mobile */
-  .bottom-panel {
-    width: calc(100% - 24px);
-    left: 50%;
-    transform: translateX(-50%);
-    max-width: none;
-    padding: 20px;
-    border-radius: 12px;
-  }
-
-  /* Buttons and save actions */
-  .save-btn {
-    width: 100%;
-    padding: 12px;
-    font-size: 1rem;
-  }
-
-  /* Keep good vertical spacing for banners/headers */
-  .tab-content { padding: 18px 14px; }
-  .tab-content h2 { font-size: 1.4rem; margin-bottom: 12px; }
-
-  /* reduce large shadows on mobile for performance & clarity */
-  .profile-item, .scholarship-box, .login-card { box-shadow: none; }
-}
-
-/* Small tweak for very small phones (<=360px) */
-@media (max-width: 360px) {
-  .text-box h1 { font-size: 1.6rem; }
-  .tab-btn { padding: 7px 10px; font-size: 0.88rem; }
-}
+@ -791,159 +106,3 @@ body { overflow-y: auto; }
 
   </style>
 </head>
